@@ -513,7 +513,7 @@ impl<Output> Kcp<Output> {
             (buf.len() + self.mss as usize - 1) / self.mss as usize
         };
 
-        if count >= KCP_WND_RCV as usize {
+        if count >= self.rcv_wnd as usize {
             debug!("send bufsize={} mss={} too large", buf.len(), self.mss);
             return Err(Error::UserBufTooBig);
         }
@@ -1057,6 +1057,10 @@ impl<Output> Kcp<Output> {
     #[inline]
     pub fn mss(&self) -> usize {
         self.mss
+    }
+    #[inline]
+    pub fn set_mss(&mut self, mss: usize) {
+        self.mss = mss;
     }
 
     /// Set maximum resend times
